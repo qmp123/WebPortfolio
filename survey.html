@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>소프트웨어 기술 선호에 관한 설문 - Chrome</title>
+    <style>
+        /* [CSS 영역] 전체 배경 및 폰트 설정 */
+        body {
+            background-color: #b0c4de; /* 연한 하늘색 배경 */
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: block;
+        }
+
+        /* 설문지 전체 컨테이너 */
+        .survey-container {
+            width: 550px;
+            margin: 40px auto;
+            background-color: #add8e6; /* 상단 및 푸터 배경 (밝은 하늘색) */
+            border: 1px solid #7f9db9;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* 제목 스타일 */
+        h2 {
+            text-align: center;
+            margin: 20px 0 5px 0;
+            font-size: 28px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .intro {
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* 설문 폼 몸통 (분홍색/인디핑크 계열 배경) */
+        .survey-form {
+            background-color: #db939a; /* 이미지 특유의 핑크빛 배경 */
+            padding: 20px;
+            border-top: 1px solid #b07076;
+            border-bottom: 1px solid #b07076;
+        }
+
+        /* 각 항목 레이아웃 */
+        .form-group {
+            margin-bottom: 15px;
+            display: block;
+            font-size: 14px;
+        }
+
+        /* 항목 이름 (왼쪽 정렬 레이블) */
+        .label {
+            font-weight: bold;
+            color: #800020; /* 진한 붉은색/버건디 계열 글자색 */
+            width: 120px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        /* 라디오 및 체크박스 레이블 여백 */
+        .form-group label {
+            margin-right: 10px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        /* 셀렉트 박스 스타일 */
+        select {
+            padding: 2px 5px;
+            font-size: 13px;
+        }
+
+        /* 텍스트 영역 스타일 */
+        textarea {
+            width: 320px;
+            height: 120px;
+            padding: 8px;
+            border: 1px solid #a0a0a0;
+            font-family: inherit;
+            font-size: 13px;
+            resize: none; /* 크기 조절 비활성화 */
+            display: inline-block;
+        }
+
+        /* 제출 버튼 스타일 */
+        .button-group {
+            text-align: right;
+            margin-top: 15px;
+            margin-bottom: 0;
+        }
+
+        button {
+            background-color: #800020;
+            color: white;
+            border: none;
+            padding: 6px 18px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #600018;
+        }
+
+        /* 푸터 영역 스타일 */
+        .footer {
+            background-color: #e69d45; /* 이미지 하단의 주황/갈색 계열 배경 */
+            color: #000;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="survey-container">
+        <h2>설문지</h2>
+        <p class="intro">소프트웨어 기술에 대한 의견을 듣습니다. 많은 참여 부탁드립니다.</p>
+
+        <form id="surveyForm" class="survey-form">
+            
+            <div class="form-group">
+                <span class="label">학년</span>
+                <label><input type="radio" name="grade" value="1" checked> 1학년</label>
+                <label><input type="radio" name="grade" value="2"> 2학년</label>
+                <label><input type="radio" name="grade" value="3"> 3학년</label>
+                <label><input type="radio" name="grade" value="4"> 4학년</label>
+            </div>
+
+            <div class="form-group">
+                <span class="label">성별</span>
+                <label><input type="radio" name="gender" value="male"> 남</label>
+                <label><input type="radio" name="gender" value="female" checked> 여</label>
+            </div>
+
+            <div class="form-group">
+                <span class="label">관심 분야</span>
+                <select name="field">
+                    <option value="mobile" selected>모바일 소프트웨어</option>
+                    <option value="web">웹 프로그래밍</option>
+                    <option value="ai">인공지능 / 데이터 분석</option>
+                    <option value="system">시스템 소프트웨어</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <span class="label">진로(다중 선택)</span>
+                <label><input type="checkbox" name="career" value="dev" checked> 개발</label>
+                <label><input type="checkbox" name="career" value="plan"> 기획</label>
+                <label><input type="checkbox" name="career" value="sales"> 영업</label>
+                <label><input type="checkbox" name="career" value="startup"> 창업</label>
+            </div>
+
+            <div class="form-group">
+                <span class="label" style="margin-top: 5px;">남기고 싶은 말</span>
+                <textarea name="comments" placeholder="글을 남겨주세요"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">제출하기</button>
+            </div>
+
+        </form>
+
+        <div class="footer">
+            Copyright 2022 by Kitae
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("surveyForm");
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // 기본 폼 전송에 따른 새로고침 방지
+
+                // 1. 선택된 학년 라디오 값 가져오기
+                const gradeActive = document.querySelector('input[name="grade"]:checked');
+                const grade = gradeActive ? gradeActive.value : "선택 안 됨";
+
+                // 2. 선택된 성별 라디오 값 가져오기
+                const genderActive = document.querySelector('input[name="gender"]:checked');
+                const gender = genderActive ? (genderActive.value === "male" ? "남" : "여") : "선택 안 됨";
+
+                // 3. 선택된 관심 분야 드롭다운 텍스트 가져오기
+                const fieldSelect = document.querySelector('select[name="field"]');
+                const field = fieldSelect.options[fieldSelect.selectedIndex].text;
+
+                // 4. 체크된 진로 다중 선택 값 모으기
+                const careerCheckboxes = document.querySelectorAll('input[name="career"]:checked');
+                let careers = [];
+                careerCheckboxes.forEach(function(cb) {
+                    careers.push(cb.parentElement.textContent.trim());
+                });
+
+                // 5. 입력된 남기고 싶은 말 가져오기
+                const comments = document.querySelector('textarea[name="comments"]').value;
+
+                // 사용자가 입력한 데이터를 브라우저 팝업 알림과 개발자 도구 창에 노출
+                alert(`[설문 제출 결과]\n\n학년: ${grade}학년\n성별: ${gender}\n관심 분야: ${field}\n진로 선택: ${careers.join(", ")}\n남기고 싶은 말: ${comments}`);
+                
+                console.log("--- 설문 데이터 처리 완료 ---");
+                console.log(`학년: ${grade}학년 / 성별: ${gender} / 분야: ${field} / 진로: ${careers.join(", ")} / 남긴말: ${comments}`);
+            });
+        });
+    </script>
+</body>
+</html>

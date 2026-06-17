@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>동적 달력</title>
+    <style>
+        .calendar-container {
+            width: 350px;
+            margin: 50px auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-family: sans-serif;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .header button {
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            width: 14.2%;
+            height: 40px;
+            text-align: center;
+        }
+        th { background-color: #f2f2f2; }
+        th:first-child, td:first-child { color: red; } /* 일요일 */
+        th:last-child, td:last-child { color: blue; }  /* 토요일 */
+        .today {
+            background-color: #ffeb3b;
+            font-weight: bold;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calendar-container">
+    <div class="header">
+        <button onclick="moveMonth(-1)">◀</button>
+        <h2 id="calendar-title">2026년 06월</h2>
+        <button onclick="moveMonth(1)">▶</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    let currentDate = new Date();
+
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth(); // 0 = 1월, 11 = 12월
+
+        // 제목 업데이트
+        document.getElementById('calendar-title').innerText = `${year}년 ${String(month + 1).padStart(2, '0')}월`;
+
+        // 이번 달의 첫날 요일 및 마지막 날짜 계산
+        const firstDayIndex = new Date(year, month, 1).getDay(); // 0(일) ~ 6(토)
+        const lastDate = new Date(year, month + 1, 0).getDate();
+
+        const calendarBody = document.getElementById('calendar-body');
+        calendarBody.innerHTML = ''; // 기존 달력 내용 초기화
+
+        let date = 1;
+        const today = new Date();
+
+        // 6주(행) 동안 반복 수행
+        for (let i = 0; i < 6; i++) {
+            let row = document.createElement('tr');
+
+            // 일주일(7일) 반복 수행
+            for (let j = 0; j < 7; j++) {
+                let cell = document.createElement('td');
+
+                if (i === 0 && j < firstDayIndex) {
+                    // 첫 주에서 시작 요일 전까지 빈 칸 처리
+                    cell.innerText = '';
+                } else if (date > lastDate) {
+                    // 마지막 날짜를 넘어가면 빈 칸 처리
+                    cell.innerText = '';
+                } else {
+                    cell.innerText = date;
+                    
+                    // 오늘 날짜 표시 강조
+                    if (year === today.getFullYear() && month === today.getMonth() && date === today.getDate()) {
+                        cell.classList.add('today');
+                    }
+                    date++;
+                }
+                row.appendChild(cell);
+            }
+            calendarBody.appendChild(row);
+            
+            // 모든 날짜가 채워졌다면 다음 행을 만들지 않고 중단
+            if (date > lastDate) break;
+        }
+    }
+
+    function moveMonth(delta) {
+        currentDate.setMonth(currentDate.getMonth() + delta);
+        renderCalendar();
+    }
+
+    // 초기 실행
+    renderCalendar();
+</script>
+
+</body>
+</html>

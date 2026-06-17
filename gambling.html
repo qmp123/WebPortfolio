@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>갬블링 게임 - Chrome</title>
+    <style>
+        /* 기본 글꼴 및 컨테이너 디자인 */
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+            font-size: 22px;
+        }
+
+        .description {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* 3개의 숫자가 들어가는 전체 박스 영역 */
+        .game-box {
+            display: inline-block;
+            background-color: #d2b48c; /* 이미지 속 연한 갈색/황토색 배경 */
+            border: 1px solid #a0a0a0;
+            padding: 15px 25px;
+            margin-bottom: 15px;
+        }
+
+        /* 각 숫자가 표시되는 박스 스타일 */
+        .number-box {
+            display: inline-block;
+            font-size: 50px;
+            font-style: italic; /* 기울임꼴 글씨 */
+            font-weight: bold;
+            color: blue; /* 파란색 글씨 */
+            width: 50px;
+            text-align: center;
+            cursor: pointer; /* 클릭 가능함을 시각적으로 표시 */
+            margin-right: 15px;
+            user-select: none; /* 텍스트 블록 지정 방지 */
+        }
+
+        /* 마지막 숫자 박스는 오른쪽 여백을 없앰 */
+        .number-box:last-child {
+            margin-right: 0;
+        }
+
+        /* 성공 / 실패 결과 메시지 영역 */
+        #result-message {
+            font-size: 16px;
+            font-style: italic;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer; /* 클릭하여 재시작할 수 있음을 나타냄 */
+            display: inline-block;
+        }
+        
+        /* 성공 시 메시지 스타일 (예시 화면 유추 기반) */
+        .success {
+            color: #8b0000; /* 진한 빨강/자주색 */
+        }
+        
+        /* 실패 시 메시지 스타일 */
+        .fail {
+            color: #555555; /* 회색조 */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>갬블링 게임</h2>
+    <div class="description">
+        각 숫자를 클릭하면 0에서 2사이의 난수로 바뀝니다. 모두 같은 수가 나오면 승리합니다.
+    </div>
+
+    <hr>
+
+    <div class="game-box">
+        <span class="number-box" id="num1">0</span>
+        <span class="number-box" id="num2">0</span>
+        <span class="number-box" id="num3">0</span>
+    </div>
+
+    <div>
+        <span id="result-message"></span>
+    </div>
+
+    <script>
+        // 숫자가 각각 클릭되었는지 여부를 추적하는 배열
+        let clicked = [false, false, false];
+        // 각 칸에 저장된 숫자 값들을 담을 배열
+        let values = [0, 0, 0];
+        // 게임 오버(결과 판정 완료) 상태 토글 변수
+        let gameOver = false;
+
+        const numElements = [
+            document.getElementById("num1"),
+            document.getElementById("num2"),
+            document.getElementById("num3")
+        ];
+        const resultMessage = document.getElementById("result-message");
+
+        // 3개의 숫자 엘리먼트에 각각 클릭 이벤트 리스너 등록
+        numElements.forEach((element, index) => {
+            element.addEventListener("click", function() {
+                // 게임이 끝났거나 이미 해당 칸을 클릭했다면 동작 무시
+                if (gameOver || clicked[index]) return;
+
+                // 0 ~ 2 사이의 정수 난수 발생
+                const randomVal = Math.floor(Math.random() * 3);
+                
+                // 화면 업데이트 및 상태 기록
+                element.innerText = randomVal;
+                values[index] = randomVal;
+                clicked[index] = true;
+
+                // 마지막 3번째 숫자 박스까지 모두 클릭되었는지 검사
+                if (clicked[0] && clicked[1] && clicked[2]) {
+                    gameOver = true;
+                    checkResult();
+                }
+            });
+        });
+
+        // 성공 및 실패 결과를 검사하고 메시지를 띄우는 함수
+        function checkResult() {
+            // 3개의 숫자가 모두 같은지 체크
+            if (values[0] === values[1] && values[1] === values[2]) {
+                resultMessage.innerText = "Success(click here to do again)";
+                resultMessage.className = "success";
+            } else {
+                resultMessage.innerText = "fail(click here to do again)";
+                resultMessage.className = "fail";
+            }
+        }
+
+        // 결과 메시지를 클릭하면 게임 초기화 및 재시작
+        resultMessage.addEventListener("click", function() {
+            if (!gameOver) return; // 게임이 끝나지 않은 상태에서는 반응 없음
+
+            // 변수 및 배열 초기화
+            clicked = [false, false, false];
+            values = [0, 0, 0];
+            gameOver = false;
+
+            // 각 숫자 박스를 초기 화면인 0 상태로 복구
+            numElements.forEach(element => {
+                element.innerText = "0";
+            });
+
+            // 결과 메시지 지우기
+            resultMessage.innerText = "";
+            resultMessage.className = "";
+        });
+    </script>
+</body>
+</html>

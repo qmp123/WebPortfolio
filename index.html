@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김재환 | Portfolio</title>
+    
+    <meta property="og:title" content="Kim JaeHwan | Game & Web Developer">
+    <meta property="og:description" content="Dedicated to development with VS Code & Unity Engine">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://qmp123.github.io/my_profile_web/">
+
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 재환 님의 메인 아이덴티티 Teal 컬러 가이드 반영 */
+        :root {
+            --primary-teal: #2d7d81;
+            --light-teal: #eef7f7;
+            --dark-text: #2c3e50;
+            --light-text: #7f8c8d;
+            --white: #ffffff;
+            --bg-gray: #f4f7f7;
+        }
+
+        /* 기본 스타일 초기화 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', sans-serif;
+            color: var(--dark-text);
+            overflow: hidden; /* 스크롤바 완전히 숨김 */
+            background-color: var(--bg-gray);
+        }
+
+        /* 고정 네비게이션 바 */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(45, 125, 129, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-teal);
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-menu button {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--dark-text);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-menu button:hover, .nav-menu button.active {
+            color: var(--primary-teal);
+        }
+
+        /* ◀ ▶ 메인 섹션 좌우 슬라이드 내비게이션 화살표 버튼 */
+        .slide-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(45, 125, 129, 0.2);
+            border-radius: 50%;
+            color: var(--dark-text);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .slide-arrow:hover {
+            background-color: var(--primary-teal);
+            color: var(--white);
+            border-color: var(--primary-teal);
+            box-shadow: 0 4px 20px rgba(45, 125, 129, 0.3);
+        }
+
+        .arrow-prev { left: 40px; }
+        .arrow-next { right: 40px; }
+
+        @media (max-width: 768px) {
+            .slide-arrow { display: none; } /* 모바일에서는 스와이프 유도 */
+        }
+
+        /* 화면 하단 중앙 고정 가로형 인디케이터 도트 */
+        .indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: row; 
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: var(--primary-teal);
+            transform: scale(1.4);
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        /* 가로 정렬 외곽 래퍼 */
+        .fullpage-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* [수정 완] 내부 기차 레일 컨테이너: 섹션이 총 4개이므로 400%로 확장 */
+        .fullpage-container {
+            display: flex;
+            width: 400%; 
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* 공통 섹션 레이아웃 */
+        .section {
+            width: 100vw;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 140px 100px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .section-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        @media (max-width: 968px) {
+            .section-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding-top: 40px;
+            }
+            .section { padding: 100px 40px 80px; }
+        }
+
+        /* 텍스트 소개 레이어 */
+        .text-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .project-tag {
+            align-self: flex-start;
+            background-color: var(--light-teal);
+            color: var(--primary-teal);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .text-area h1, .text-area h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .text-area h1 span, .text-area h2 span {
+            color: var(--primary-teal);
+        }
+
+        .text-area p.desc {
+            color: var(--light-text);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        /* Meta 테이블 데이터 스타일 */
+        .meta-info {
+            border-top: 1px solid rgba(0,0,0,0.08);
+            padding-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .meta-item span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--light-text);
+            margin-bottom: 4px;
+        }
+
+        .meta-item p {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin: 0;
+        }
+
+        /* 우측 메인 미디어 가로 쇼케이스 컨테이너 */
+        .visual-area {
+            width: 100%;
+            height: 520px;
+            border-radius: 24px;
+            box-shadow: 0 20px 45px rgba(45, 125, 129, 0.12);
+            position: relative;
+            overflow: hidden;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 968px) {
+            .visual-area { height: 320px; }
+        }
+
+        /* 인트로 전용 데코레이션 그라디언트 박스 */
+        .intro-visual-bg {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-teal) 0%, #1a4f52 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .intro-visual-bg span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+
+        /* 비디오 컨테이너 세팅 */
+        .video-wrapper {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .project-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 오리지널 플레이 스타일 버튼 링크 고도화 */
+        .view-details-btn {
+            display: inline-block;
+            align-self: flex-start;
+            padding: 14px 28px;
+            background: var(--primary-teal);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 25px;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(45, 125, 129, 0.25);
+        }
+        .view-details-btn:hover {
+            background: #1e5a5d;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(45, 125, 129, 0.35);
+        }
+
+        /* 기술 스택 (Skills) 인터페이스 배치 및 태그 */
+        .skills-display-container {
+            width: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .skill-group {
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+            padding-bottom: 20px;
+        }
+        .skill-group:last-child { border: none; padding-bottom: 0; }
+
+        .skill-label {
+            font-weight: 700;
+            color: var(--primary-teal);
+            display: block;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--light-teal);
+            color: var(--primary-teal);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(45, 125, 129, 0.15);
+        }
+
+        /* 🎰 [수정 완] Demos 내부 전용 반응형 그리드 및 컴포넌트 CSS */
+        .demos-display-container {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            overflow-y: auto; /* 데모가 많아질 경우 카드 영역 스크롤 확보 */
+        }
+        
+        @media (max-width: 500px) {
+            .demos-display-container { grid-template-columns: 1fr; }
+        }
+
+        .demo-card {
+            background: var(--bg-gray);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(45, 125, 129, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .demo-card:hover {
+            background: var(--light-teal);
+            transform: translateY(-3px);
+            border-color: var(--primary-teal);
+        }
+
+        .demo-card-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .demo-icon { font-size: 1.6rem; }
+
+        .demo-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .demo-card p {
+            font-size: 0.85rem;
+            color: var(--light-text);
+            line-height: 1.5;
+            word-break: keep-all;
+            margin-bottom: 12px;
+        }
+
+        .demo-btn {
+            align-self: flex-start;
+            padding: 6px 16px;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .demo-btn:hover { background: #1e5a5d; }
+
+        /* 하단 저작권 푸터 고정 레이아웃 */
+        footer {
+            position: fixed;
+            bottom: 20px;
+            right: 40px;
+            color: var(--light-text);
+            font-size: 0.8rem;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            footer { left: 20px; right: auto; bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">KIM JAEHWAN</div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" onclick="goToSection(0)">Intro</button>
+                <button class="nav-btn" onclick="goToSection(1)">Featured Project</button>
+                <button class="nav-btn" onclick="goToSection(2)">Skills</button>
+                <button class="nav-btn" onclick="goToSection(3)">Demos</button>
+            </nav>
+        </div>
+    </header>
+
+    <button class="slide-arrow arrow-prev" onclick="moveSlide(-1)">❮</button>
+    <button class="slide-arrow arrow-next" onclick="moveSlide(1)">❯</button>
+
+    <div class="indicator">
+        <div class="dot active" onclick="goToSection(0)"></div>
+        <div class="dot" onclick="goToSection(1)"></div>
+        <div class="dot" onclick="goToSection(2)"></div>
+        <div class="dot" onclick="goToSection(3)"></div>
+    </div>
+
+    <div class="fullpage-wrapper">
+        <div class="fullpage-container" id="fullpage">
+
+            <section class="section" id="sec-intro">
+                <div class="section-content">
+                    <div class="text-area">
+                        <div class="project-tag">Introduction</div>
+                        <h1>안녕하세요,<br>개발자 <span>김재환</span>입니다.</h1>
+                        <p class="desc">VS Code와 Unity Engine을 토대로 다채로운 디지털 경험을 만듭니다. 직관적인 코드 구조와 몰입감 높은 인터랙션을 끊임없이 연구하고 구현하는 것에 즐거움을 느낍니다.</p>
+                    </div>
+                    <div class="visual-area">
+                        <div class="intro-visual-bg">
+                            KIM JAEHWAN PORTFOLIO<br>
+                            <span>Dedicated to Game & Web Development</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-project">
+                <div class="section-content">
+                    <div class="text-area">
+                        <div class="project-tag">Featured Web Game</div>
+                        <h2>🚀 코딩타자연습<br>웹 게임 프로젝트</h2>
+                        <p class="desc">익숙한 한글 타자연습 소프트웨어의 구동 매커니즘을 코딩 문법 환경에 완벽히 정합시켰습니다. 실시간으로 타이핑 구문을 추적하며, 분석 알고리즘을 통해 사용자의 오타율과 취약점을 진단해 주는 데이터 피드백 웹 게임입니다.</p>
+                        
+                        <div class="meta-info">
+                            <div class="meta-item"><span>Engine</span><p>Web Environment</p></div>
+                            <div class="meta-item"><span>IDE</span><p>VS Code</p></div>
+                            <div class="meta-item"><span>Status</span><p>Live Play</p></div>
+                        </div>
+
+                        <a href="https://codetypinggame.com" target="_blank" class="view-details-btn">웹 게임 플레이하기</a>
+                    </div>
+                    
+                    <div class="visual-area">
+                        <div class="video-wrapper">
+                            <video class="project-video" controls autoplay muted loop>
+                                <source src="video_CodeTypist.mp4" type="video/mp4">
+                                브라우저가 동영상 플레이 인터페이스를 지원하지 않습니다.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-skills">
+                <div class="section-content">
+                    <div class="text-area">
+                        <div class="project-tag">Expertise</div>
+                        <h2>준비된 기술력을<br>바탕으로 <span>확장</span>합니다.</h2>
+                        <p class="desc">다양한 백엔드 및 프론트엔드 언어 인프라를 이해하고 유연하게 대처합니다. Unity 엔진을 결합하여 동적인 클라이언트 모듈부터 반응형 웹 아키텍처까지 넓은 범주의 테크 스택을 다룹니다.</p>
+                    </div>
+                    
+                    <div class="visual-area">
+                        <div class="skills-display-container">
+                            <div class="skill-group">
+                                <span class="skill-label">Programming Languages</span>
+                                <div class="tag-cloud">
+                                    <span class="tag">C</span>
+                                    <span class="tag">Python</span>
+                                    <span class="tag">Java</span>
+                                    <span class="tag">JavaScript</span>
+                                </div>
+                            </div>
+                            <div class="skill-group">
+                                <span class="skill-label">Game Engines</span>
+                                <div class="tag-cloud">
+                                    <span class="tag">Unity Engine</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-demos">
+                <div class="section-content">
+                    <div class="text-area">
+                        <div class="project-tag">Mini Projects</div>
+                        <h2>JavaScript<br><span>Web Demos</span></h2>
+                        <p class="desc">자바스크립트의 핵심 메커니즘인 동적 DOM 제어, 알고리즘 구현, 반응형 웹 아키텍처 기술을 검증하기 위해 제작한 다채로운 스크립트 모듈 목록입니다.</p>
+                    </div>
+                    
+                    <div class="visual-area">
+                        <div class="demos-display-container">
+                            <div class="demo-card">
+                                <div class="demo-card-top">
+                                    <span class="demo-icon">📱</span>
+                                    <h3>동적 반응형 웹</h3>
+                                </div>
+                                <p>해상도 붕괴 방지 기법을 반영하여 실시간 테마 가변 변환을 구현한 예제</p>
+                                <a href="index1.html" target="_blank" class="demo-btn">View Demo</a>
+                            </div>
+
+                            <div class="demo-card">
+                                <div class="demo-card-top">
+                                    <span class="demo-icon">🧮</span>
+                                    <h3>심플 계산기</h3>
+                                </div>
+                                <p>Grid 인터페이스 레이아웃 세팅과 실시간 수식 연산 매핑 연동 구현</p>
+                                <a href="index2.html" target="_blank" class="demo-btn">View Demo</a>
+                            </div>
+
+                            <div class="demo-card">
+                                <div class="demo-card-top">
+                                    <span class="demo-icon">📅</span>
+                                    <h3>동적 달력</h3>
+                                </div>
+                                <p>Date 객체 매커니즘을 응용하여 월 가로 이동 인터랙션을 구현한 달력</p>
+                                <a href="index3.html" target="_blank" class="demo-btn">View Demo</a>
+                            </div>
+
+                            <div class="demo-card">
+                                <div class="demo-card-top">
+                                    <span class="demo-icon">🎰</span>
+                                    <h3>겜블링 게임 웹</h3>
+                                </div>
+                                <p>자바스크립트 난수 풀 가동 알고리즘 및 조건 피드백 갱신 스크립트 작동 게임</p>
+                                <a href="gambling.html" target="_blank" class="demo-btn">View Demo</a>
+                            </div>
+
+                            <div class="demo-card">
+                                <div class="demo-card-top">
+                                    <span class="demo-icon">📝</span>
+                                    <h3>설문지 웹 페이지</h3>
+                                </div>
+                                <p>폼 인풋 밸류 검증 시스템 알고리즘과 인터랙티브 피드백 폼 디자인</p>
+                                <a href="survey.html" target="_blank" class="demo-btn">View Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Kim JaeHwan | Game & Web Developer Portfolio
+    </footer>
+
+    <script>
+        // ==========================================
+        // [수정 완] 전역 가로 트랜지션 인터랙션 스크립트 매니징
+        // ==========================================
+        let currentIdx = 0;
+        const totalSections = 4; // 섹션이 4개이므로 4로 수정하여 제한 해제
+        const container = document.getElementById('fullpage');
+        const dots = document.querySelectorAll('.dot');
+        const buttons = document.querySelectorAll('.nav-btn');
+
+        // 특정 슬라이드 구간으로 정밀 이동 연산 처리
+        function goToSection(idx) {
+            if (idx < 0 || idx >= totalSections) return;
+            currentIdx = idx;
+            
+            // X축 이동 제어 기획
+            container.style.transform = `translateX(-${currentIdx * 100}vw)`;
+            
+            // UI 컴포넌트 상태 동기화 액티브 연출
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIdx));
+            buttons.forEach((btn, i) => btn.classList.toggle('active', i === currentIdx));
+
+            // 양 끝점 도달 시 컨트롤 화살표 상태 플래그 변경
+            document.querySelector('.arrow-prev').style.opacity = currentIdx === 0 ? '0.2' : '1';
+            document.querySelector('.arrow-prev').style.pointerEvents = currentIdx === 0 ? 'none' : 'auto';
+            document.querySelector('.arrow-next').style.opacity = currentIdx === totalSections - 1 ? '0.2' : '1';
+            document.querySelector('.arrow-next').style.pointerEvents = currentIdx === totalSections - 1 ? 'none' : 'auto';
+        }
+
+        // 상대 방향 조작 인지
+        function moveSlide(direction) {
+            goToSection(currentIdx + direction);
+        }
+
+        // 이니셜 프레임 세팅
+        goToSection(0);
+
+        // 모바일 사용자를 위한 스와이프 제어
+        let touchStartX = 0;
+        window.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diffX = touchStartX - touchEndX;
+            
+            if (Math.abs(diffX) > 60) {
+                if (diffX > 0) {
+                    goToSection(currentIdx + 1);
+                } else {
+                    goToSection(currentIdx - 1);
+                }
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
